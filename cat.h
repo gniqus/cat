@@ -1,0 +1,74 @@
+#include <mutex>
+#include <string>
+#include <functional>
+#include <shared_mutex>
+#include <list>
+#include <string>
+#include <any>
+#include <unordered_map>
+
+using namespace std;
+
+class lru {
+private:
+    unordered_map<string, any> kvmap_;
+    unordered_map<string, list<string>::iterator> kimap_; 
+    list<string> list_;
+    int cap_, size_;
+public:
+    lru(int cap);
+    any get(string key);
+    void set(string key, any value);
+    void del(string key);
+};
+
+class cache {
+private:
+    mutex mutex_;
+    lru*  lru_;
+    int   cap_;
+public:
+    cache(int cap);
+    void set(string key, any value);
+    any get(string key);
+    ~cache();
+};
+
+class getter {
+private:
+    typedef function<any (string)> callback;
+    callback cb_;
+public:
+    getter(callback cb);
+    any get(string key);
+};
+
+class group {
+private:
+    string       name_;
+    getter       gtr_;
+    cache*       cache_;  
+    shared_mutex mutex_;
+public:
+    group(string name, int cap, getter gtr);
+    any get(string key);
+    void set(string key, any value);
+    any pull(string key);
+    ~group();
+};
+
+class Cat {
+private:
+    map<string, group*> groups;
+    group* current_;
+    shared_mutex mutex_;
+public:
+    void add_group(string name, int cap, getter gtr);
+    group* get_group(string name);
+    any get(string key);
+private:
+    any load(string key);
+    any locally(string key);
+    void record(string key, any value);
+    ~Cat();
+};
