@@ -6,6 +6,7 @@
 #include <string>
 #include <any>
 #include <unordered_map>
+#include <map>
 
 using namespace std;
 
@@ -46,11 +47,11 @@ public:
 class group {
 private:
     string       name_;
-    getter       gtr_;
+    getter*       gtr_;
     cache*       cache_;  
     shared_mutex mutex_;
 public:
-    group(string name, int cap, getter gtr);
+    group(string name, int cap, getter* gtr);
     any get(string key);
     void set(string key, any value);
     any pull(string key);
@@ -63,12 +64,15 @@ private:
     group* current_;
     shared_mutex mutex_;
 public:
-    void add_group(string name, int cap, getter gtr);
+    Cat(string name = "default", int cap = 64, getter* gtr = new getter([](string key) {
+        return any();
+    }));
+    void add_group(string name, int cap, getter* gtr);
     group* get_group(string name);
     any get(string key);
+    ~Cat();
 private:
     any load(string key);
     any locally(string key);
     void record(string key, any value);
-    ~Cat();
 };

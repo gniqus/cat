@@ -1,16 +1,6 @@
-#include <string>
-#include <functional>
-#include <mutex>
-#include <shared_mutex>
+#include "cat.h"
 #include <iostream>
-#include <any>
 #include <map>
-#include <list>
-#include <unordered_map>
-
-#include "lru.cc"
-#include "cache.cc"
-#include "cat.cc"
 
 using namespace std;
 
@@ -31,10 +21,10 @@ int main() {
     db["ack"] = "12";
     db["sam"] = "13";
 
-    getter gtr(testgtr);
+    getter* gtr = new getter(testgtr);
 
-    cat test;
-    test.add_group("test", 512, gtr);
+    Cat test("test", 512, gtr);
+    // test.add_group("test", 512, gtr);
     test.get_group("test");
     for (auto it = db.begin(); it != db.end(); it++) {
         string k = it->first;
