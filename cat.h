@@ -26,14 +26,13 @@ public:
 
 class cache {
 private:
-    mutex mutex_;
-    lru*  lru_;
-    int   cap_;
+    mutex           mutex_;
+    shared_ptr<lru> lru_;
+    int             cap_;
 public:
     cache(int cap);
     void set(string key, any value);
     any get(string key);
-    ~cache();
 };
 
 class getter {
@@ -49,29 +48,27 @@ class group {
 private:
     string              name_;
     shared_ptr<getter>  gtr_;
-    cache*              cache_;  
+    shared_ptr<cache>   cache_;  
     shared_mutex        mutex_;
 public:
     group(string name, int cap, shared_ptr<getter> gtr);
     any get(string key);
     void set(string key, any value);
     any pull(string key);
-    ~group();
 };
 
 class Cat {
 private:
-    map<string, group*> groups;
-    group* current_;
+    map<string, shared_ptr<group>> groups;
+    shared_ptr<group> current_;
     shared_mutex mutex_;
 public:
     Cat(string name = "default", int cap = 64, shared_ptr<getter> gtr = shared_ptr<getter>(new getter([](string key) {
         return any();
     })));
     void add_group(string name, int cap, shared_ptr<getter> gtr);
-    group* get_group(string name);
+    shared_ptr<group> get_group(string name);
     any get(string key);
-    ~Cat();
 private:
     any load(string key);
     any locally(string key);
