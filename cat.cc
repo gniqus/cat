@@ -10,7 +10,7 @@ any getter::get(string key) {
     return cb_(key);
 }
 
-group::group(string name, int cap, getter* gtr) {
+group::group(string name, int cap, shared_ptr<getter> gtr) {
     name_ = name;
     gtr_ = gtr;
     cache_ = new cache(cap);
@@ -28,10 +28,10 @@ group::~group() {
     delete cache_;
 }
 
-Cat::Cat(string name, int cap, getter* gtr) {
+Cat::Cat(string name, int cap, shared_ptr<getter> gtr) {
     add_group(name, cap, gtr);
 }
-void Cat::add_group(string name, int cap, getter* gtr) {
+void Cat::add_group(string name, int cap, shared_ptr<getter> gtr) {
     unique_lock<shared_mutex> lock(mutex_);
     groups[name] = new group(name, cap, gtr);
 }

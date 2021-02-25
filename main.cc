@@ -21,7 +21,7 @@ int main() {
     db["ack"] = "12";
     db["sam"] = "13";
 
-    getter* gtr = new getter(testgtr);
+    shared_ptr<getter> gtr(new getter(testgtr));
 
     Cat test("test", 512, gtr);
     // test.add_group("test", 512, gtr);
