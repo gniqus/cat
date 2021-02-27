@@ -4,49 +4,72 @@
 
 using namespace std;
 
-map<string, string> db;
-map<string, int> loadcnt;
+// map<string, string> db;
+// map<string, int> loadcnt;
 
-any testgtr(string key) {
-    cout << "[SlowDB] search key: " << key << endl;
-    if (db.find(key) == db.end()) {
-        cout << key << " not exists!" << endl;
-    }
-    loadcnt[key]++;
-    return db[key];
-}
+// any testgtr(string key) {
+//     cout << "[SlowDB] search key: " << key << endl;
+//     if (db.find(key) == db.end()) {
+//         cout << key << " not exists!" << endl;
+//     }
+//     loadcnt[key]++;
+//     return db[key];
+// }
 
 int main() {
-    db["tom"] = "11";
-    db["ack"] = "12";
-    db["sam"] = "13";
-
-    shared_ptr<getter> gtr(new getter(testgtr));
-
-    Cat test("test", 512, gtr);
-    // test.add_group("test", 512, gtr);
-    test.get_group("test");
-    for (auto it = db.begin(); it != db.end(); it++) {
-        string k = it->first;
-        string v = it->second;
-        cout.flush();
-
-        any value = test.get(k);
-        if (any_cast<string>(value) != v) {
-            cout << "failed get " << k << endl;
+    consistent cons(3, [](string key) {
+        return atoll(key.c_str());
+    });
+    cons.add("6");
+    cons.add("4");
+    cons.add("2");
+    map <string, string> test;
+    test["2"] = "2";
+    test["11"] = "2";
+    test["23"] = "4";
+    test["27"] = "2";
+    for (auto i : test) {
+        if (cons.get(i.first) != i.second) {
+            cout << "error " << i.first << " " << i.second << endl;
         }
-        value = test.get(k);
-        if (loadcnt[k] > 1) {
-            cout << "cache miss " << k << endl;
+    }
+    cons.add("8");
+    test["27"] = "8";
+    for (auto i : test) {
+        if (cons.get(i.first) != i.second) {
+            cout << "error " << i.first << " " << i.second << endl;
         }
-        cout << "hit" << " " << any_cast<string>(value) << endl;
     }
-    any value = test.get("tom");
-    if (value.has_value()) {
-        cout << "get tom has_value" << " " << any_cast<string>(value) << endl;
-    }
-    value = test.get("unknown");
-    if (value.has_value()) {
-        cout << "unknown get has_value" << endl;
-    }
+    // db["tom"] = "11";
+    // db["ack"] = "12";
+    // db["sam"] = "13";
+
+    // shared_ptr<getter> gtr(new getter(testgtr));
+
+    // Cat test("test", 512, gtr);
+    // // test.add_group("test", 512, gtr);
+    // test.get_group("test");
+    // for (auto it = db.begin(); it != db.end(); it++) {
+    //     string k = it->first;
+    //     string v = it->second;
+    //     cout.flush();
+
+    //     any value = test.get(k);
+    //     if (any_cast<string>(value) != v) {
+    //         cout << "failed get " << k << endl;
+    //     }
+    //     value = test.get(k);
+    //     if (loadcnt[k] > 1) {
+    //         cout << "cache miss " << k << endl;
+    //     }
+    //     cout << "hit" << " " << any_cast<string>(value) << endl;
+    // }
+    // any value = test.get("tom");
+    // if (value.has_value()) {
+    //     cout << "get tom has_value" << " " << any_cast<string>(value) << endl;
+    // }
+    // value = test.get("unknown");
+    // if (value.has_value()) {
+    //     cout << "unknown get has_value" << endl;
+    // }
 }

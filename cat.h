@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <map>
 #include <memory>
+#include <algorithm>
 
 using namespace std;
 
@@ -73,4 +74,19 @@ private:
     any load(string key);
     any locally(string key);
     void record(string key, any value);
+};
+
+class consistent {
+private:
+    typedef function<size_t (string)> hash;
+    hash                calc_;
+    int                 virt_;
+    vector<size_t>      keys_;
+    map<size_t, string> cast_;
+
+    void add() {}
+public:
+    consistent(int virt, hash calc = std::hash<string>());
+    void add(string key);
+    string get(string key);
 };
