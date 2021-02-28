@@ -1,6 +1,5 @@
 #include "cat.h"
 #include <iostream>
-#include <map>
 
 using namespace std;
 
@@ -17,29 +16,43 @@ using namespace std;
 // }
 
 int main() {
-    consistent cons(3, [](string key) {
-        return atoll(key.c_str());
-    });
-    cons.add("6");
-    cons.add("4");
-    cons.add("2");
-    map <string, string> test;
-    test["2"] = "2";
-    test["11"] = "2";
-    test["23"] = "4";
-    test["27"] = "2";
-    for (auto i : test) {
-        if (cons.get(i.first) != i.second) {
-            cout << "error " << i.first << " " << i.second << endl;
-        }
+    TcpServer server(8888);
+    while (1) {
+        TcpSocket* socket = server.Accept();
+        string r = socket->Recv();
+        cout << r << endl;
+        delete socket;
     }
-    cons.add("8");
-    test["27"] = "8";
-    for (auto i : test) {
-        if (cons.get(i.first) != i.second) {
-            cout << "error " << i.first << " " << i.second << endl;
-        }
-    }
+    // while (1) {
+    //     cout.flush();
+    //     TcpSocket* socket = server.Accept();
+    //     socket->Send("hello im server");
+    //     string r = socket->Recv();
+    //     cout << r << endl;
+    // }
+    // consistent cons(3, [](string key) {
+    //     return atoll(key.c_str());
+    // });
+    // cons.add("6");
+    // cons.add("4");
+    // cons.add("2");
+    // map <string, string> test;
+    // test["2"] = "2";
+    // test["11"] = "2";
+    // test["23"] = "4";
+    // test["27"] = "2";
+    // for (auto i : test) {
+    //     if (cons.get(i.first) != i.second) {
+    //         cout << "error " << i.first << " " << i.second << endl;
+    //     }
+    // }
+    // cons.add("8");
+    // test["27"] = "8";
+    // for (auto i : test) {
+    //     if (cons.get(i.first) != i.second) {
+    //         cout << "error " << i.first << " " << i.second << endl;
+    //     }
+    // }
     // db["tom"] = "11";
     // db["ack"] = "12";
     // db["sam"] = "13";

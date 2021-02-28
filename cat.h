@@ -9,6 +9,11 @@
 #include <map>
 #include <memory>
 #include <algorithm>
+#include <iostream>
+
+#include<WinSock2.h>
+#pragma comment(lib, "ws2_32.lib")
+#define CONNECT_NUM_MAX 10
 
 using namespace std;
 
@@ -89,4 +94,25 @@ public:
     consistent(int virt, hash calc = std::hash<string>());
     void add(string key);
     string get(string key);
+};
+
+class TcpSocket {
+private:
+    SOCKET socket_;
+public:
+    TcpSocket();
+    TcpSocket(SOCKET socket);
+    void Connect(string ip, unsigned short port);
+    void Send(string data);
+    string Recv();
+    ~TcpSocket();
+};
+
+class TcpServer {
+private:
+    SOCKET monitor_;
+public:
+    TcpServer(unsigned short port);
+    TcpSocket* Accept();
+    ~TcpServer();
 };
