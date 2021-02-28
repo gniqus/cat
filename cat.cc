@@ -31,12 +31,21 @@ Cat::Cat(string name, int cap, shared_ptr<getter> gtr) {
 void Cat::add_group(string name, int cap, shared_ptr<getter> gtr) {
     unique_lock<shared_mutex> lock(mutex_);
     groups[name] = shared_ptr<group>(new group(name, cap, gtr));
+    current_ = groups[name];
 }
 shared_ptr<group> Cat::get_group(string name) {
     shared_lock<shared_mutex> lock(mutex);
+    if (groups.find(name) == groups.end()) {
+        cout << "group error" << endl;
+    }
     current_ = groups[name];
     return current_;
 }
+
+void Cat::set(string key, any value) {
+    current_->set(key, value);
+}
+
 any Cat::get(string key) {
     if (key.empty()) {
         return any();

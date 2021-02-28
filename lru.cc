@@ -12,6 +12,7 @@ any lru::get(string key) {
         kimap_[key] = --list_.end();
         return kvmap_[key];
     }
+    return any();
 }
 
 void lru::del(string key) {

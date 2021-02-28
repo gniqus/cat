@@ -10,19 +10,25 @@ using namespace std;
 //     cout << "[SlowDB] search key: " << key << endl;
 //     if (db.find(key) == db.end()) {
 //         cout << key << " not exists!" << endl;
+//         return any();
 //     }
 //     loadcnt[key]++;
 //     return db[key];
 // }
 
 int main() {
-    TcpServer server(8888);
-    while (1) {
-        TcpSocket* socket = server.Accept();
-        string r = socket->Recv();
-        cout << r << endl;
-        delete socket;
-    }
+    Cat* cat = new Cat();
+    cat->set("test", string("success"));
+    serve s("test", shared_ptr<Cat>(cat));
+    s.run(8888);
+
+    // TcpServer server(8888);
+    // while (1) {
+    //     TcpSocket* socket = server.Accept();
+    //     string r = socket->Recv();
+    //     cout << r << endl;
+    //     delete socket;
+    // }
     // while (1) {
     //     cout.flush();
     //     TcpSocket* socket = server.Accept();
@@ -60,7 +66,8 @@ int main() {
     // shared_ptr<getter> gtr(new getter(testgtr));
 
     // Cat test("test", 512, gtr);
-    // // test.add_group("test", 512, gtr);
+
+    // test.add_group("test", 512, gtr);
     // test.get_group("test");
     // for (auto it = db.begin(); it != db.end(); it++) {
     //     string k = it->first;
@@ -77,7 +84,8 @@ int main() {
     //     }
     //     cout << "hit" << " " << any_cast<string>(value) << endl;
     // }
-    // any value = test.get("tom");
+
+    // any value = test.get("cao");
     // if (value.has_value()) {
     //     cout << "get tom has_value" << " " << any_cast<string>(value) << endl;
     // }
@@ -85,4 +93,5 @@ int main() {
     // if (value.has_value()) {
     //     cout << "unknown get has_value" << endl;
     // }
+    // cout << "end" << endl;
 }

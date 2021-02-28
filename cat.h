@@ -10,6 +10,8 @@
 #include <memory>
 #include <algorithm>
 #include <iostream>
+#include <regex>
+#include <vector>
 
 #include<WinSock2.h>
 #pragma comment(lib, "ws2_32.lib")
@@ -75,6 +77,7 @@ public:
     void add_group(string name, int cap, shared_ptr<getter> gtr);
     shared_ptr<group> get_group(string name);
     any get(string key);
+    void set(string key, any value);
 private:
     any load(string key);
     any locally(string key);
@@ -115,4 +118,14 @@ public:
     TcpServer(unsigned short port);
     TcpSocket* Accept();
     ~TcpServer();
+};
+
+class serve {
+private:
+    string          self_;
+    string          base_;
+    shared_ptr<Cat> cat_;
+public:
+    serve(string self, shared_ptr<Cat> cat);
+    run(unsigned short port);
 };
