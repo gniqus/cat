@@ -5,12 +5,12 @@ consistent::consistent(int virt, hash calc) {
     calc_ = calc;
 }
 
-void consistent::add(string key) {
+void consistent::add(string peer) {
     for (int i = 1; i <= virt_; ++i) {
-        size_t hval = calc_(to_string(i) + key);
+        size_t hval = calc_(to_string(i) + peer);
         keys_.push_back(hval);
         rotate(lower_bound(keys_.begin(), keys_.end() - 1, hval), keys_.end() - 1, keys_.end());
-        cast_[hval] = key;
+        cast_[hval] = peer;
     }
 }
 

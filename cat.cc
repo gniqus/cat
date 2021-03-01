@@ -24,9 +24,13 @@ void group::set(string key, any value) {
 any group::pull(string key) {
     return gtr_->get(key);
 }
+string group::name() {
+    return name_;
+}
 
-Cat::Cat(string name, int cap, shared_ptr<getter> gtr) {
+Cat::Cat(string self, string name, int cap, shared_ptr<getter> gtr) {
     add_group(name, cap, gtr);
+    srv_ = shared_ptr<baserve>(new serve(self, shared_ptr<Cat>(this)));
 }
 void Cat::add_group(string name, int cap, shared_ptr<getter> gtr) {
     unique_lock<shared_mutex> lock(mutex_);
@@ -54,6 +58,12 @@ any Cat::get(string key) {
     return value.has_value() ? value : load(key);
 }
 any Cat::load(string key) {
+    if (srv_ != nullptr) {
+        shared_ptr<client> cli = srv_->pick(key);
+        if (cli != nullptr) {
+            return cli->get(current_->name(), key);
+        }
+    }
     return locally(key);
 }
 any Cat::locally(string key) {

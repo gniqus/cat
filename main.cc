@@ -1,5 +1,4 @@
 #include "cat.h"
-#include <iostream>
 
 using namespace std;
 
@@ -17,10 +16,12 @@ using namespace std;
 // }
 
 int main() {
-    Cat* cat = new Cat();
-    cat->set("test", string("success"));
-    serve s("test", shared_ptr<Cat>(cat));
-    s.run(8888);
+    Cat cat("127.0.0.1:8081");
+    
+    // Cat* cat = new Cat();
+    // cat->set("test", string("success"));
+    // serve s("test", shared_ptr<Cat>(cat));
+    // s.run(8888);
 
     // TcpServer server(8888);
     // while (1) {
