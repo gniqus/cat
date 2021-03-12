@@ -57,6 +57,11 @@ any Cat::get(string key) {
     any value = current_->get(key);
     return value.has_value() ? value : load(key);
 }
+void Cat::registerPeer(string peer) {
+    regex sep(":");
+    vector<string> v(sregex_token_iterator(peer.begin(), peer.end(), sep, -1), sregex_token_iterator());
+    srv_->set(v[0], atoi(v[1].c_str()));
+}
 any Cat::load(string key) {
     if (srv_ != nullptr) {
         shared_ptr<client> cli = srv_->pick(key);

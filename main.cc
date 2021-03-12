@@ -17,6 +17,7 @@ using namespace std;
 
 int main() {
     Cat cat("127.0.0.1:8081");
+    cat.registerPeer("127.0.0.1:8081");
     
     // Cat* cat = new Cat();
     // cat->set("test", string("success"));

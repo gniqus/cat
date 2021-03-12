@@ -133,6 +133,7 @@ public:
     shared_ptr<group> get_group(string name);
     any get(string key);
     void set(string key, any value);
+    void registerPeer(string peer);
 private:
     any load(string key);
     any locally(string key);
